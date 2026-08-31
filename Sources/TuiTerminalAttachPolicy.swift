@@ -48,21 +48,30 @@ enum TuiTerminalAttachPolicy {
     }
 
     /// Whether a brand-new terminal surface should be provisioned in the
-    /// daemon. Only plain local main-grid terminals qualify: an explicit
-    /// startup command (agent launch, remote workspace bootstrap), a tmux
-    /// start command, or a remote PTY session all keep today's path.
+    /// daemon. Only plain local terminals with no startup payload qualify.
+    /// Commands, initial input, restore agents, remote PTY sessions, and
+    /// remote workspaces keep the existing PTY path until the daemon launch
+    /// contract can carry that state faithfully.
     static func shouldProvisionNewTerminal(
         flagEnabled: Bool,
         hasExplicitStartupCommand: Bool,
         hasTmuxStartCommand: Bool,
         hasRemotePTYSessionID: Bool,
-        isRemoteWorkspace: Bool
+        isRemoteWorkspace: Bool,
+        hasStartupInput: Bool = false,
+        hasStartupRestoreAgent: Bool = false,
+        hasConfigCommand: Bool = false,
+        hasConfigInitialInput: Bool = false
     ) -> Bool {
         flagEnabled
             && !hasExplicitStartupCommand
             && !hasTmuxStartCommand
             && !hasRemotePTYSessionID
             && !isRemoteWorkspace
+            && !hasStartupInput
+            && !hasStartupRestoreAgent
+            && !hasConfigCommand
+            && !hasConfigInitialInput
     }
 
     /// The daemon session name for this app instance: `cmux-<tag>` derived

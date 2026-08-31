@@ -164,6 +164,32 @@ struct TuiTerminalAttachSpikeTests {
         ))
     }
 
+    @Test
+    func doesNotReplaceStartupPayloadsWithAChildDaemonShell() {
+        func rejects(
+            hasStartupInput: Bool = false,
+            hasStartupRestoreAgent: Bool = false,
+            hasConfigCommand: Bool = false,
+            hasConfigInitialInput: Bool = false
+        ) {
+            #expect(!TuiTerminalAttachPolicy.shouldProvisionNewTerminal(
+                flagEnabled: true,
+                hasExplicitStartupCommand: false,
+                hasTmuxStartCommand: false,
+                hasRemotePTYSessionID: false,
+                isRemoteWorkspace: false,
+                hasStartupInput: hasStartupInput,
+                hasStartupRestoreAgent: hasStartupRestoreAgent,
+                hasConfigCommand: hasConfigCommand,
+                hasConfigInitialInput: hasConfigInitialInput
+            ))
+        }
+        rejects(hasStartupInput: true)
+        rejects(hasStartupRestoreAgent: true)
+        rejects(hasConfigCommand: true)
+        rejects(hasConfigInitialInput: true)
+    }
+
     // MARK: - Session naming and commands
 
     @Test
