@@ -56,13 +56,21 @@ enum TuiTerminalAttachPolicy {
         hasExplicitStartupCommand: Bool,
         hasTmuxStartCommand: Bool,
         hasRemotePTYSessionID: Bool,
-        isRemoteWorkspace: Bool
+        isRemoteWorkspace: Bool,
+        hasStartupInput: Bool = false,
+        hasStartupRestoreAgent: Bool = false,
+        hasConfigCommand: Bool = false,
+        hasConfigInitialInput: Bool = false
     ) -> Bool {
         flagEnabled
             && !hasExplicitStartupCommand
             && !hasTmuxStartCommand
             && !hasRemotePTYSessionID
             && !isRemoteWorkspace
+            && !hasStartupInput
+            && !hasStartupRestoreAgent
+            && !hasConfigCommand
+            && !hasConfigInitialInput
     }
 
     /// The daemon session name for this app instance: `cmux-<tag>` derived
